@@ -1,9 +1,41 @@
-import { SignedOut, UserButton } from "@clerk/nextjs";
-import { SignedIn } from "@clerk/nextjs";
-import { SignInButton, SignUpButton } from "@clerk/nextjs";
-import React from "react";
+"use client";
+import {
+  SignedOut,
+  UserButton,
+  useUser,
+  SignedIn,
+  SignInButton,
+  SignUpButton,
+} from "@clerk/nextjs";
+import Link from "next/link";
+import Image from "next/image";
+import logo from "../../../public/logo.png";
+import React, { use } from "react";
 
-function Navber() {
+function Navbar() {
+  const { isSignedIn } = useUser();
+
+const navLinks = (
+  <>
+    <li>
+      <Link href="/">Home</Link>
+    </li>
+    <li>
+      <Link href="/bills">Bills</Link>
+    </li>
+    {isSignedIn && (
+      <>
+        <li>
+          <Link href="/add-bill">Add Bill</Link>
+        </li>
+        <li>
+          <Link href="/my-pay-bills">My Bills</Link>
+        </li>
+      </>
+    )}
+  </>
+);
+
   return (
     <div className="navbar bg-base-100 shadow-sm">
       <div className="navbar-start">
@@ -16,62 +48,27 @@ function Navber() {
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
-              {" "}
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="2"
                 d="M4 6h16M4 12h8m-8 6h16"
-              />{" "}
+              />
             </svg>
           </div>
           <ul
-            tabIndex="-1"
+            tabIndex={-1}
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
           >
-            <li>
-              <a>Item 1</a>
-            </li>
-            <li>
-              <a>Parent</a>
-              <ul className="p-2">
-                <li>
-                  <a>Submenu 1</a>
-                </li>
-                <li>
-                  <a>Submenu 2</a>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <a>Item 3</a>
-            </li>
+            {navLinks}
           </ul>
         </div>
-        <a className="btn btn-ghost text-xl">daisyUI</a>
+        <Link href="/" className="text-xl">
+          <Image src={logo} alt="logo" width={40} height={40} />
+        </Link>
       </div>
       <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal px-1">
-          <li>
-            <a>Item 1</a>
-          </li>
-          <li>
-            <details>
-              <summary>Parent</summary>
-              <ul className="p-2">
-                <li>
-                  <a>Submenu 1</a>
-                </li>
-                <li>
-                  <a>Submenu 2</a>
-                </li>
-              </ul>
-            </details>
-          </li>
-          <li>
-            <a>Item 3</a>
-          </li>
-        </ul>
+        <ul className="menu menu-horizontal px-1">{navLinks}</ul>
       </div>
       <div className="navbar-end">
         <SignedOut>
@@ -90,4 +87,4 @@ function Navber() {
   );
 }
 
-export default Navber;
+export default Navbar;

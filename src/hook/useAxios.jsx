@@ -1,31 +1,34 @@
 import axios from "axios";
-import { useAuth } from "@clerk/nextjs"; // Needed to get token (see note below)
 
-// Create instance
+// আপনার সার্ভারের URL দিন
 const instance = axios.create({
-  baseURL: "https://smart-bills-server-nine.vercel.app",
+  baseURL: "https://smart-bills-next-server.vercel.app", // আপনার ব্যাকএন্ড URL এখানে বসাবেন
+  // withCredentials: true, // যদি কুকি ব্যবহার করেন
 });
 
-// Add request interceptor
-instance.interceptors.request.use(async (config) => {
-  // Get Clerk token
-  // Clerk's getToken() returns a Promise with the JWT
-  // This ONLY WORKS IN COMPONENTS or hooks -- see note below
-  // So use a function (see below)
-  return config;
-});
+// ✅ Request Interceptor: এটি প্রতিবার রিকোয়েস্ট করার ঠিক আগ মুহূর্তে রান হয়
+instance.interceptors.request.use(
+  (config) => {
+    // চেক করা হচ্ছে কোডটি ব্রাউজারে রান হচ্ছে কিনা
+    if (typeof window !== "undefined") {
+      // লোকাল স্টোরেজ থেকে টোকেন নেওয়া
+      const token = localStorage.getItem("token"); 
+      
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
-// Response interceptor
+// ✅ Response Interceptor (Optional: এরর হ্যান্ডলিং এর জন্য)
 instance.interceptors.response.use(
   (response) => response,
-  async (error) => {
-    // Handle 401/403
-    if (error.response && [401, 403].includes(error.response.status)) {
-      // With Clerk, sign-out: window.Clerk.signOut() (if using global Clerk object)
-      // Or use router (with next/router) to redirect
-      localStorage.clear();
-      window.location.href = "/login";
-    }
+  (error) => {
     return Promise.reject(error);
   }
 );

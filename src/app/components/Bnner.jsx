@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination, Navigation } from "swiper/modules";
-import { Typewriter } from "react-simple-typewriter";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { Typewriter } from "react-simple-typewriter";
+import { Autoplay, Navigation, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 // CSS Imports
+import instanceance from "@/hook/useAxios";
 import "swiper/css";
-import "swiper/css/pagination";
 import "swiper/css/navigation";
-import instance from "@/hook/useAxios";
+import "swiper/css/pagination";
 
 const Banner = () => {
   const [bills, setBills] = useState([]); // Added simple type safety
@@ -19,7 +19,7 @@ const Banner = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await instance.get("/bills/latest3");
+        const { data } = await instanceance.get("/bills/latest3");
         setBills(data);
       } catch (err) {
         console.error("Error fetching latest bills:", err);
@@ -50,7 +50,6 @@ const Banner = () => {
           {bills.map((bill) => (
             <SwiperSlide key={bill._id}>
               <div className="flex flex-col-reverse md:flex-row items-center justify-between max-w-7xl mx-auto px-6 md:px-10 py-10 md:py-16 gap-10">
-                
                 {/* Text Content */}
                 <div className="flex-1 text-center md:text-left space-y-5">
                   <h1 className="text-3xl md:text-5xl font-extrabold text-primary drop-shadow-sm leading-tight min-h-[3rem] md:min-h-[4rem]">

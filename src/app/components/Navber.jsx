@@ -10,31 +10,31 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import logo from "../../../public/logo.png";
-import React, { use } from "react";
+import React from "react"; // ❌ Removed the unnecessary '{ use }' import
 
 function Navbar() {
   const { isSignedIn } = useUser();
 
-const navLinks = (
-  <>
-    <li>
-      <Link href="/">Home</Link>
-    </li>
-    <li>
-      <Link href="/bills">Bills</Link>
-    </li>
-    {isSignedIn && (
-      <>
-        <li>
-          <Link href="/add-bill">Add Bill</Link>
-        </li>
-        <li>
-          <Link href="/my-pay-bills">My Bills</Link>
-        </li>
-      </>
-    )}
-  </>
-);
+  const navLinks = (
+    <>
+      <li>
+        <Link href="/">Home</Link>
+      </li>
+      <li>
+        <Link href="/bills">Bills</Link>
+      </li>
+      {isSignedIn && (
+        <>
+          <li>
+            <Link href="/add-bill">Add Bill</Link>
+          </li>
+          <li>
+            <Link href="/my-pay-bills">My Bills</Link>
+          </li>
+        </>
+      )}
+    </>
+  );
 
   return (
     <div className="navbar bg-base-100 shadow-sm">
